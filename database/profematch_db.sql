@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-06-2026 a las 02:32:51
+-- Tiempo de generación: 05-07-2026 a las 03:31:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -156,6 +156,16 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `nombre`, `email`, `password_hash`, `rol`, `score_confiabilidad`, `fecha_registro`, `estado_cuenta`) VALUES
+(1, 'Daniel Quispe', 'administrador@profematch.edu.pe', 'password_hash_123', 'admin', 100, '2026-07-05 00:37:03', 'activo'),
+(2, 'Ana Silva', 'ana.estudiante@profematch.edu.pe', 'password_hash_123', 'estudiante', 95, '2026-07-05 00:37:03', 'activo'),
+(3, 'Carlos Gómez', 'carlos.profe@profematch.edu.pe', 'password_hash_123', 'profesor', 85, '2026-07-05 00:37:03', 'activo'),
+(4, 'Luis Ramírez', 'luis.profe@profematch.edu.pe', 'password_hash_123', 'profesor', 45, '2026-07-05 00:37:03', 'activo');
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -275,7 +285,7 @@ ALTER TABLE `tutorias`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
