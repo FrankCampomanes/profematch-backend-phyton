@@ -13,6 +13,7 @@ const getProfesores = async (req, res) => {
                 p.foto, 
                 p.reconocimientos, 
                 p.horarios,
+                p.universidad,
                 p.perfil_completado,
                 GROUP_CONCAT(DISTINCT c.nombre) as cursos_impartidos,
                 COUNT(DISTINCT i.estudiante_id) as estudiantes_atendidos
@@ -87,6 +88,7 @@ const getProfesores = async (req, res) => {
                 email: row.email,
                 descripcion: row.descripcion,
                 metodologia: row.metodologia,
+                universidad: row.universidad,
                 foto: row.foto,
                 perfil_completado: row.perfil_completado === 1,
                 reconocimientos: JSON.parse(row.reconocimientos || '[]'),

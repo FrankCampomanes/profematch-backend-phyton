@@ -114,15 +114,18 @@ const seedDatabase = async () => {
         );
         const profDemoId = resProfDemo.insertId;
 
+        const universidades = ['UCV', 'UPN', 'UNMSM', 'UTP', 'PUCP', 'ULima'];
+
         await pool.query(
-            "INSERT INTO profesores_perfiles (usuario_id, descripcion, metodologia, reconocimientos, horarios, foto, perfil_completado) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO profesores_perfiles (usuario_id, descripcion, metodologia, reconocimientos, horarios, foto, universidad, perfil_completado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 profDemoId, 
                 "Profesor con más de 10 años de experiencia en desarrollo de software e investigación académica. Apasionado por la enseñanza.", 
                 "Práctica 100%, aprendizaje basado en proyectos y feedback continuo.", 
                 '["Top Developer 2024", "Certificado AWS"]', 
                 '{"Lunes a Viernes":["16:00 - 20:00"]}', 
-                "https://ui-avatars.com/api/?name=Profesor+Ejemplo&background=0D8ABC&color=fff", 
+                "https://ui-avatars.com/api/?name=Profesor+Ejemplo&background=0D8ABC&color=fff",
+                "UNMSM",
                 true
             ]
         );
@@ -186,19 +189,25 @@ const seedDatabase = async () => {
             const email = `profe_fake_${i}@profematch.com`;
             const password_hash = await bcrypt.hash('123456', 10);
             
-            const [userRes] = await pool.query(
+            const [resProf] = await pool.query(
                 "INSERT INTO usuarios (nombre, email, password_hash, rol, estado) VALUES (?, ?, ?, 'profesor', 'aprobado')",
                 [fakeNames[i], email, password_hash]
             );
-            const profId = userRes.insertId;
+            const profId = resProf.insertId;
 
+            const univRandom = universidades[Math.floor(Math.random() * universidades.length)];
+
+            // Perfil Completo
             await pool.query(
-                "INSERT INTO profesores_perfiles (usuario_id, descripcion, metodologia, reconocimientos, horarios, foto, perfil_completado) VALUES (?, ?, ?, '[]', '{}', ?, ?)",
+                "INSERT INTO profesores_perfiles (usuario_id, descripcion, metodologia, reconocimientos, horarios, foto, universidad, perfil_completado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 [
-                    profId,
-                    `Especialista dedicado a la docencia con alta tasa de aprobación. Sesiones interactivas adaptadas al ritmo del alumno.`,
-                    `Mi metodología se basa en la participación activa del alumno y el aprendizaje por problemas.`,
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(fakeNames[i])}&background=random`,
+                    profId, 
+                    "Especialista con amplia trayectoria profesional y vocación de enseñanza práctica.", 
+                    "Teórico-práctica, enfocada en resolución de problemas reales.",
+                    '["Reconocimiento Académico 2023"]', 
+                    '{"Fines de Semana":["09:00 - 13:00"]}', 
+                    `https://ui-avatars.com/api/?name=${fakeNames[i].replace(/ /g, '+')}&background=random&color=fff`, 
+                    univRandom,
                     true
                 ]
             );

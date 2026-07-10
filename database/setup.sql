@@ -24,6 +24,8 @@ CREATE TABLE `usuarios` (
   `password_hash` varchar(255) NOT NULL,
   `rol` enum('admin','profesor','estudiante') NOT NULL,
   `estado` enum('pendiente','aprobado','inactivo') NOT NULL DEFAULT 'pendiente',
+  `score_confiabilidad` int(11) NOT NULL DEFAULT 100,
+  `plan` varchar(50) NOT NULL DEFAULT 'Gratuito',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -39,6 +41,7 @@ CREATE TABLE `profesores_perfiles` (
   `reconocimientos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`reconocimientos`)),
   `horarios` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`horarios`)),
   `foto` varchar(500) DEFAULT NULL,
+  `universidad` varchar(255) DEFAULT NULL,
   `perfil_completado` boolean NOT NULL DEFAULT false,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE
@@ -75,6 +78,7 @@ CREATE TABLE `sesiones` (
   `fecha_hora_inicio` datetime NOT NULL,
   `fecha_hora_fin` datetime NOT NULL,
   `cupos_maximos` int(11) NOT NULL DEFAULT 1,
+  `enlace_reunion` varchar(500) DEFAULT NULL,
   `estado` enum('Programada','En Curso','Finalizada','Cancelada') NOT NULL DEFAULT 'Programada',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),

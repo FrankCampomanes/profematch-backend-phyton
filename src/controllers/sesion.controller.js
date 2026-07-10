@@ -3,7 +3,7 @@ const pool = require('../config/db');
 // Crear una nueva sesión
 const createSesion = async (req, res) => {
     try {
-        const { profesor_id, curso_id, fecha_hora_inicio, fecha_hora_fin, cupos_maximos } = req.body;
+        const { profesor_id, curso_id, fecha_hora_inicio, fecha_hora_fin, cupos_maximos, enlace_reunion } = req.body;
 
         if (!profesor_id || !curso_id || !fecha_hora_inicio || !fecha_hora_fin) {
             return res.status(400).json({ error: 'Faltan datos requeridos (profesor_id, curso_id, fechas)' });
@@ -30,9 +30,9 @@ const createSesion = async (req, res) => {
 
         // Si pasa la validación, insertamos en BD
         const [result] = await pool.query(
-            `INSERT INTO sesiones (profesor_id, curso_id, fecha_hora_inicio, fecha_hora_fin, cupos_maximos, estado) 
-             VALUES (?, ?, ?, ?, ?, 'Programada')`,
-            [profesor_id, curso_id, inicio, fin, cupos_maximos || 1]
+            `INSERT INTO sesiones (profesor_id, curso_id, fecha_hora_inicio, fecha_hora_fin, cupos_maximos, enlace_reunion, estado) 
+             VALUES (?, ?, ?, ?, ?, ?, 'Programada')`,
+            [profesor_id, curso_id, inicio, fin, cupos_maximos || 1, enlace_reunion || null]
         );
 
         res.status(201).json({ 

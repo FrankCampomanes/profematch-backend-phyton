@@ -16,10 +16,12 @@ app.get('/', (req, res) => {
 const authRoutes = require('./src/routes/auth.routes');
 const profesorRoutes = require('./src/routes/profesor.routes');
 const sesionRoutes = require('./src/routes/sesion.routes');
+const usuarioRoutes = require('./src/routes/usuario.routes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/professors', profesorRoutes);
 app.use('/api/sessions', sesionRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 
 // --- Inicialización del Servidor ---
 const PORT = process.env.PORT || 3006;
