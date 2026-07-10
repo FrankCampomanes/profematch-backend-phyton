@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 /**
  * @swagger
  * /api/auth/login:
@@ -58,5 +60,6 @@ router.post('/login', authController.login);
  */
 // Ruta para Registrarse: POST /api/auth/register
 router.post('/register', authController.register);
+
 
 module.exports = router;

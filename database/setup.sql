@@ -21,7 +21,7 @@ CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL UNIQUE,
-  `password_hash` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NULL DEFAULT NULL,
   `rol` enum('admin','profesor','estudiante') NOT NULL,
   `estado` enum('pendiente','aprobado','inactivo') NOT NULL DEFAULT 'pendiente',
   `score_confiabilidad` int(11) NOT NULL DEFAULT 100,
