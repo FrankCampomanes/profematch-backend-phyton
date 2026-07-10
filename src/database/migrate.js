@@ -1,22 +1,44 @@
 const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 async function migrate() {
     try {
         console.log('Iniciando migración de la base de datos...');
-        
-        // Creamos una conexión cruda para poder crear la DB si no existe
-        const connection = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            multipleStatements: true // Importante para ejecutar el script SQL entero
-        });
 
-        // Asegurar que la BD existe
-        await connection.query('CREATE DATABASE IF NOT EXISTS profematch_db;');
-        await connection.query('USE profematch_db;');
+        const config = {
+            host: process.env.DB_HOST || 'localhost',
+            user: process.env.DB_USER || 'root',
+            password: process.env.DB_PASSWORD || '',
+            database: process.env.DB_NAME || 'profematch_db',
+            port: process.env.DB_PORT || 3306,
+            multipleStatements: true // Importante para ejecutar el script SQL entero
+        };
+
+        // Habilitar SSL automáticamente si el host no es localhost (para bases de datos en la nube)
+        if (config.host !== 'localhost') {
+            config.ssl = {
+                rejectUnauthorized: false
+            };
+        }
+
+        // Si es localhost, intentamos asegurar que la base de datos exista
+        if (config.host === 'localhost') {
+            console.log(`Verificando/creando base de datos local: ${config.database}...`);
+            const tempConnection = await mysql.createConnection({
+                host: config.host,
+                user: config.user,
+                password: config.password,
+                port: config.port
+            });
+            await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${config.database}\`;`);
+            await tempConnection.end();
+        }
+
+        // Conectar directamente a la base de datos especificada
+        console.log(`Conectando a la base de datos en ${config.host}...`);
+        const connection = await mysql.createConnection(config);
 
         // Leer el archivo setup.sql
         const sqlFilePath = path.join(__dirname, '../../database/setup.sql');
@@ -35,3 +57,4 @@ async function migrate() {
 }
 
 migrate();
+

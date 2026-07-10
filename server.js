@@ -24,8 +24,10 @@ app.use('/api/sessions', sesionRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 
 // --- Inicialización del Servidor ---
+const { swaggerDocs } = require('./src/config/swagger');
 const PORT = process.env.PORT || 3006;
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor backend corriendo en el puerto ${PORT}`);
+    swaggerDocs(app);
 });
