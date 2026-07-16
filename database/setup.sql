@@ -1,11 +1,15 @@
 -- Base de Datos: profematch_db
 -- Creado para la nueva integración Frontend-Backend
 
+CREATE DATABASE IF NOT EXISTS `profematch_db`;
+USE `profematch_db`;
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
 -- Eliminar tablas si existen para poder regenerar la base de datos limpia
+DROP TABLE IF EXISTS `quejas`;
 DROP TABLE IF EXISTS `profesores_cursos`;
 DROP TABLE IF EXISTS `resenas`;
 DROP TABLE IF EXISTS `inscripciones`;
@@ -78,6 +82,7 @@ CREATE TABLE `sesiones` (
   `fecha_hora_inicio` datetime NOT NULL,
   `fecha_hora_fin` datetime NOT NULL,
   `cupos_maximos` int(11) NOT NULL DEFAULT 1,
+  `precio` decimal(10,2) NOT NULL DEFAULT 50.00,
   `enlace_reunion` varchar(500) DEFAULT NULL,
   `estado` enum('Programada','En Curso','Finalizada','Cancelada') NOT NULL DEFAULT 'Programada',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -117,6 +122,24 @@ CREATE TABLE `resenas` (
   FOREIGN KEY (`profesor_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`sesion_id`) REFERENCES `sesiones`(`id`) ON DELETE CASCADE,
   UNIQUE KEY `resena_unica_por_sesion` (`estudiante_id`, `sesion_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+-- Estructura de tabla para la tabla `quejas` (Moderación / Panel Admin)
+-- --------------------------------------------------------
+CREATE TABLE `quejas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `reportante_id` int(11) DEFAULT NULL,
+  `acusado_id` int(11) NOT NULL,
+  `sesion_id` int(11) DEFAULT NULL,
+  `tipo` varchar(255) NOT NULL,
+  `gravedad` enum('Alta','Media','Baja') NOT NULL DEFAULT 'Media',
+  `estado` enum('Pendiente','En Revision','Resuelto') NOT NULL DEFAULT 'Pendiente',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`reportante_id`) REFERENCES `usuarios`(`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`acusado_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`sesion_id`) REFERENCES `sesiones`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 COMMIT;
