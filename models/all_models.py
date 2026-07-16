@@ -61,6 +61,8 @@ class Sesion(Base):
     curso_id = Column(Integer, ForeignKey("cursos.id", ondelete="CASCADE"), nullable=False)
     fecha_hora_inicio = Column(DateTime, nullable=False)
     fecha_hora_fin = Column(DateTime, nullable=False)
+    tema = Column(String(255), default='General', nullable=False)
+    precio = Column(Integer, default=10, nullable=False)
     cupos_maximos = Column(Integer, default=1, nullable=False)
     enlace_reunion = Column(String(500), nullable=True)
     estado = Column(Enum('Programada', 'En Curso', 'Finalizada', 'Cancelada'), default='Programada', nullable=False)

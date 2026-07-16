@@ -42,5 +42,7 @@ class SesionCreate(BaseModel):
     curso_id: int
     fecha_hora_inicio: datetime
     fecha_hora_fin: datetime
+    tema: str
+    precio: int
     cupos_maximos: Optional[int] = 1
     enlace_reunion: Optional[str] = None
