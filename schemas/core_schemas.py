@@ -15,7 +15,7 @@ class ResenaItem(BaseModel):
     comentario: str
     fecha: datetime
     puntuaciones: Dict[str, Any]
-    estrellas_calculadas: int
+    estrellas_calculadas: float
     respuesta_profesor: Optional[str] = None
 
 class MetricasProfesor(BaseModel):

@@ -51,7 +51,7 @@ def get_profesores(db: Session = Depends(get_db)):
             if p_json:
                 vals = list(p_json.values())
                 rev_avg = sum(vals) / len(vals)
-                rev_avg_estrellas = round(rev_avg)
+                rev_avg_estrellas = round(rev_avg, 1)
                 sum_of_review_averages += rev_avg
                 
             lista_resenas.append(ResenaItem(
@@ -264,8 +264,23 @@ def get_profesor_dashboard(id: int, db: Session = Depends(get_db)):
 @router.get("/{id}/sesiones", response_model=List[SesionOut])
 def get_profesor_sesiones(id: int, db: Session = Depends(get_db)):
     sesiones = db.query(Sesion).filter(Sesion.profesor_id == id).all()
-    result = []
+    ahora = datetime.utcnow()
+    resultado_actualizado = False
+
     for s in sesiones:
+        # AUTO-FINALIZAR: Si la sesión está "Programada" y ya pasaron más de 60 min después del fin
+        if s.estado == 'Programada' and s.fecha_hora_fin:
+            limite_gracia = s.fecha_hora_fin + timedelta(minutes=60)
+            if ahora > limite_gracia:
+                s.estado = 'Finalizada'
+                resultado_actualizado = True
+
+    if resultado_actualizado:
+        db.commit()
+
+    sesiones_refrescadas = db.query(Sesion).filter(Sesion.profesor_id == id).all()
+    result = []
+    for s in sesiones_refrescadas:
         inscritos = db.query(Inscripcion).filter(Inscripcion.sesion_id == s.id, Inscripcion.estado == 'Confirmado').count()
         result.append(SesionOut(
             id=s.id,

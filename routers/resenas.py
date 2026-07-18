@@ -31,12 +31,14 @@ def crear_resena(resena: ResenaCreate, db: Session = Depends(get_db)):
         # created_at is populated automatically
     )
     db.add(nueva_resena)
+    db.flush()
     
     if resena.queja_formal:
-        # Penalizar profesor (ejemplo básico)
         profesor = db.query(Usuario).filter(Usuario.id == resena.profesor_id, Usuario.rol == 'profesor').first()
         if profesor:
-            profesor.score_confiabilidad = max(0, (profesor.score_confiabilidad or 100) - 20)
+            total_quejas = db.query(Resena).filter(Resena.profesor_id == profesor.id, Resena.queja_formal == True).count()
+            penalidad = (total_quejas // 3) * 5
+            profesor.score_confiabilidad = max(0, 100 - penalidad)
             
     db.commit()
     return {"message": "Reseña guardada exitosamente"}
@@ -105,7 +107,7 @@ def get_resenas_profesor(profesor_id: int, db: Session = Depends(get_db)):
         estrellas = 0
         if puntuaciones:
             valores = list(puntuaciones.values())
-            estrellas = round(sum(valores) / len(valores)) if valores else 0
+            estrellas = round(sum(valores) / len(valores), 1) if valores else 0
 
         resultado.append({
             "id": r.id,

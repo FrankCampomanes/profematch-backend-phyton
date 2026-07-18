@@ -21,6 +21,7 @@ class Usuario(Base):
     resenas_dadas = relationship("Resena", foreign_keys="[Resena.estudiante_id]", back_populates="estudiante", cascade="all, delete-orphan")
     resenas_recibidas = relationship("Resena", foreign_keys="[Resena.profesor_id]", back_populates="profesor", cascade="all, delete-orphan")
     cursos = relationship("Curso", secondary="profesores_cursos", back_populates="profesores")
+    advertencias_recibidas = relationship("Advertencia", foreign_keys="[Advertencia.profesor_id]", back_populates="profesor", cascade="all, delete-orphan")
 
 class ProfesorPerfil(Base):
     __tablename__ = "profesores_perfiles"
@@ -103,3 +104,17 @@ class Resena(Base):
     estudiante = relationship("Usuario", foreign_keys=[estudiante_id], back_populates="resenas_dadas")
     profesor = relationship("Usuario", foreign_keys=[profesor_id], back_populates="resenas_recibidas")
     sesion = relationship("Sesion", back_populates="resenas")
+
+class Advertencia(Base):
+    __tablename__ = "advertencias"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    profesor_id = Column(Integer, ForeignKey("usuarios.id", ondelete="CASCADE"), nullable=False)
+    admin_id = Column(Integer, ForeignKey("usuarios.id", ondelete="SET NULL"), nullable=True)
+    resena_id = Column(Integer, ForeignKey("resenas.id", ondelete="SET NULL"), nullable=True)
+    mensaje = Column(Text, nullable=False)
+    leida = Column(Boolean, default=False, nullable=False)
+    created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
+
+    profesor = relationship("Usuario", foreign_keys=[profesor_id], back_populates="advertencias_recibidas")
+    admin = relationship("Usuario", foreign_keys=[admin_id])

@@ -12,7 +12,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-from routers import auth, profesores, sesiones, usuarios, recomendaciones, estadisticas, resenas
+from routers import auth, profesores, sesiones, usuarios, recomendaciones, estadisticas, resenas, admin
 
 # Configuración básica de CORS
 app.add_middleware(
@@ -30,6 +30,7 @@ app.include_router(sesiones.router)
 app.include_router(recomendaciones.router)
 app.include_router(estadisticas.router)
 app.include_router(resenas.router)
+app.include_router(admin.router)
 
 @app.get("/")
 def read_root():
