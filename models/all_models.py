@@ -94,6 +94,10 @@ class Resena(Base):
     sesion_id = Column(Integer, ForeignKey("sesiones.id", ondelete="CASCADE"), nullable=False)
     comentario = Column(Text, nullable=False)
     puntuaciones_json = Column(JSON, nullable=False)
+    recomendaria = Column(Boolean, default=True, nullable=False)
+    queja_formal = Column(Boolean, default=False, nullable=False)
+    motivo_queja = Column(Text, nullable=True)
+    respuesta_profesor = Column(Text, nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now(), nullable=False)
 
     estudiante = relationship("Usuario", foreign_keys=[estudiante_id], back_populates="resenas_dadas")
