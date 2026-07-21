@@ -14,10 +14,17 @@ app = FastAPI(
 
 from routers import auth, profesores, sesiones, usuarios, recomendaciones, estadisticas, resenas, admin
 
+import os
+
 # Configuración básica de CORS
+origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], # Dominios permitidos (soluciona error Failed to fetch por CORS)
+    allow_origins=origins, # Dominios permitidos
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
