@@ -17,6 +17,10 @@ if DATABASE_URL:
     # Aiven da la URL como mysql://, pero SQLAlchemy necesita mysql+pymysql://
     if DATABASE_URL.startswith("mysql://"):
         DATABASE_URL = DATABASE_URL.replace("mysql://", "mysql+pymysql://", 1)
+    
+    # PyMySQL no soporta el argumento 'ssl-mode' directamente en la URL
+    DATABASE_URL = DATABASE_URL.replace("?ssl-mode=REQUIRED", "")
+    
     SQLALCHEMY_DATABASE_URL = DATABASE_URL
 else:
     # URL de conexión local
