@@ -14,6 +14,9 @@ DB_PORT = os.getenv("DB_PORT", "3306")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
+    # Aiven da la URL como mysql://, pero SQLAlchemy necesita mysql+pymysql://
+    if DATABASE_URL.startswith("mysql://"):
+        DATABASE_URL = DATABASE_URL.replace("mysql://", "mysql+pymysql://", 1)
     SQLALCHEMY_DATABASE_URL = DATABASE_URL
 else:
     # URL de conexión local
