@@ -24,7 +24,8 @@ if frontend_url:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, # Dominios permitidos
+    allow_origins=origins, # Dominios permitidos (localhost y FRONTEND_URL)
+    allow_origin_regex=r"https://.*", # Salvavidas: Permite cualquier frontend desplegado en la nube con HTTPS (como Vercel)
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
